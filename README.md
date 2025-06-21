@@ -6,7 +6,7 @@ Une application web REST monolithique pour la gestion des réservations d'un hô
 
 - Mohamed Faid
 - Mohamed Ali Ben brahim
-- Zakaria EL ARABI
+- Zakariaa El Aaraby
 
 ## 📋 Table des matières
 
