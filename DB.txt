@@ -1,0 +1,104 @@
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS gestion_hoteliere;
+USE gestion_hoteliere;
+
+-- Table des chambres
+CREATE TABLE chambres (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(10) UNIQUE NOT NULL,
+    type VARCHAR(50) NOT NULL, -- 'simple', 'double', 'suite', 'junior_suite'
+    prix_nuit DECIMAL(8,2) NOT NULL,
+    capacite INT NOT NULL,
+    etage INT NOT NULL,
+    statut VARCHAR(20) DEFAULT 'disponible', -- 'disponible', 'occupee', 'maintenance'
+    derniere_maintenance DATE
+);
+
+-- Table des clients
+CREATE TABLE clients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20),
+    email VARCHAR(150),
+    nationalite VARCHAR(50),
+    date_inscription DATE DEFAULT (CURRENT_DATE)
+);
+
+-- Table des utilisateurs (système)
+CREATE TABLE utilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    motdepasse VARCHAR(255) NOT NULL,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    admin BOOLEAN DEFAULT FALSE
+);
+
+-- Table des réservations
+CREATE TABLE reservations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    chambre_id INT NOT NULL,
+    utilisateur_id INT NOT NULL, -- Clé étrangère vers utilisateurs
+    date_arrivee DATE NOT NULL,
+    date_depart DATE NOT NULL,
+    nombre_personnes INT NOT NULL,
+    prix_total DECIMAL(10,2),
+    statut VARCHAR(20) DEFAULT 'confirmee', -- 'confirmee', 'arrivee', 'terminee', 'annulee'
+    date_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    observations TEXT,
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (chambre_id) REFERENCES chambres(id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id)
+);
+
+-- Table des services additionnels
+CREATE TABLE services_additionnels (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reservation_id INT NOT NULL,
+    type_service VARCHAR(100) NOT NULL, -- 'spa', 'restaurant', 'excursion', 'transport'
+    description VARCHAR(200),
+    prix DECIMAL(8,2) NOT NULL,
+    date_service DATE NOT NULL,
+    statut VARCHAR(20) DEFAULT 'demande', -- 'demande', 'confirme', 'realise', 'annule'
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+);
+
+-- Insertion des données d'exemple pour les chambres
+INSERT INTO chambres (numero, type, prix_nuit, capacite, etage, statut, derniere_maintenance) VALUES
+('101', 'simple', 450.00, 1, 1, 'disponible', '2025-01-15'),
+('102', 'double', 650.00, 2, 1, 'occupee', '2025-02-10'),
+('201', 'suite', 1200.00, 4, 2, 'disponible', '2025-03-05'),
+('202', 'double', 650.00, 2, 2, 'maintenance', '2025-05-20'),
+('301', 'junior_suite', 950.00, 3, 3, 'disponible', '2025-04-12'),
+('302', 'simple', 450.00, 1, 3, 'occupee', '2025-01-28');
+
+-- Insertion des données d'exemple pour les clients
+INSERT INTO clients (nom, prenom, telephone, email, nationalite, date_inscription) VALUES
+('ALAMI', 'Fatima', '0661234567', 'f.alami@email.ma', 'Marocaine', '2024-11-15'),
+('MARTIN', 'Pierre', '+33123456789', 'p.martin@email.fr', 'Française', '2025-01-20'),
+('BENALI', 'Ahmed', '0662987654', 'a.benali@gmail.com', 'Marocaine', '2025-02-10'),
+('SMITH', 'John', '+12345678901', 'j.smith@email.com', 'Américaine', '2025-03-05'),
+('GARCIA', 'Maria', '+34987654321', 'm.garcia@email.es', 'Espagnole', '2025-04-18');
+
+-- Insertion des données d'exemple pour les utilisateurs
+INSERT INTO utilisateurs (email, motdepasse, nom, prenom, admin) VALUES
+('admin@hotel.ma', '$2a$12$1KBvbzffn.Wejxq48rS/OuIhjDc3bv0K2HLRIlL8wvgfI.gC0Jxmi', 'Admin', 'Système', TRUE),
+('manager@hotel.ma', '$2a$12$wYF20vWAa59vleBlii5rv.Qs0vCH6O0Jkj0tG6viNME1dR/wtRGae', 'Alaoui', 'Amina', FALSE);
+
+-- Insertion des données d'exemple pour les réservations
+INSERT INTO reservations (client_id, chambre_id, utilisateur_id, date_arrivee, date_depart, nombre_personnes, prix_total, statut, observations) VALUES
+(1, 2, 2, '2025-06-10', '2025-06-15', 2, 3250.00, 'arrivee', 'Demande chambre avec vue sur jardin'),
+(2, 5, 2, '2025-06-20', '2025-06-25', 3, 6000.00, 'confirmee', 'Voyage de noces'),
+(3, 6, 1, '2025-06-12', '2025-06-14', 1, 900.00, 'arrivee', NULL),
+(4, 1, 2, '2025-07-01', '2025-07-07', 1, 2700.00, 'confirmee', 'Voyage d\'affaires'),
+(1, 5, 2, '2025-07-15', '2025-07-20', 2, 4750.00, 'confirmee', 'Vacances famille');
+
+-- Insertion des données d'exemple pour les services additionnels
+INSERT INTO services_additionnels (reservation_id, type_service, description, prix, date_service, statut) VALUES
+(1, 'spa', 'Massage relaxant 60min', 350.00, '2025-06-12', 'confirmee'),
+(1, 'restaurant', 'Dîner gastronomique', 580.00, '2025-06-13', 'demande'),
+(2, 'excursion', 'Visite des jardins Majorelle', 120.00, '2025-06-22', 'confirmee'),
+(3, 'transport', 'Navette aéroport', 80.00, '2025-06-12', 'realisee'),
+(5, 'spa', 'Hammam traditionnel', 200.00, '2025-07-16', 'demande');
