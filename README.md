@@ -188,6 +188,8 @@ Gestion-Hoteliere/
 │   ├── package.json        # Dépendances Node.js
 │   └── .env                # Variables d'environnement frontend
 └── README.md
+└── database_readme.md
+└── db.txt
 ```
 
 ## 📚 API Documentation
