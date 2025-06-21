@@ -45,7 +45,7 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 - **Python 3.8+**
 - **Node.js 16+** et **npm**
-- **PostgreSQL** ou **MySQL**
+- **MySQL**
 - **Git**
 
 ## 🚀 Installation
@@ -90,12 +90,6 @@ npm install
 
 ### 1. Créer la base de données
 
-**Pour PostgreSQL :**
-```sql
-CREATE DATABASE gestion_hoteliere;
-CREATE USER hotel_user WITH ENCRYPTED PASSWORD 'votre_mot_de_passe';
-GRANT ALL PRIVILEGES ON DATABASE gestion_hoteliere TO hotel_user;
-```
 
 **Pour MySQL :**
 ```sql
@@ -202,7 +196,6 @@ Une fois le backend démarré, vous pouvez accéder à :
 
 - **Documentation interactive Swagger** : http://localhost:8000/docs
 - **Documentation ReDoc** : http://localhost:8000/redoc
-- **Schéma OpenAPI** : http://localhost:8000/openapi.json
 
 ### Endpoints principaux
 
