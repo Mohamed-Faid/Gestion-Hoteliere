@@ -2,7 +2,7 @@
 
 Une application web REST monolithique pour la gestion des réservations d'un hôtel, développée avec FastAPI pour le backend et React.js pour le frontend.
 
-## 📋 Realiser par
+## 👨‍💻 Realiser par
 
 - Mohamed Faid
 - Mohamed Ali Ben brahim
